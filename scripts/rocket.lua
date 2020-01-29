@@ -18,8 +18,9 @@ Rocket.CreateGlobals = function()
     global.rocket.rocketsLaunched = global.rocket.rocketsLaunched or {}
     global.rocket.startingGoal = global.rocket.startingGoal or 0
     global.rocket.goalIncrease = global.rocket.goalIncrease or 0
+    global.rocket.goalTarget = global.rocket.goalTarget or 0
     global.rocket.goalProgress = global.rocket.goalProgress or 0
-    global.rocket.goalIncreaseSupporters = global.rocket.goalIncreaseSupporters or 0
+    global.rocket.goalIncreaseSupporters = global.rocket.goalIncreaseSupporters or {}
     global.rocket.goalItemName = global.rocket.goalItemName or ""
 end
 
@@ -34,21 +35,23 @@ end
 Rocket.OnSettingChanged = function(event)
     if event == nil or event.setting == "rocket_target-starting_goal" then
         global.rocket.startingGoal = tonumber(settings.global["rocket_target-starting_goal"].value)
+        Rocket.UpdateGoalTarget()
     end
     if event == nil or event.setting == "rocket_target-goal_type" then
         local goalTypeString = settings.global["rocket_target-goal_type"].value
-        if goalTypeString == "rocket_launch" then
-            global.rocket.goalItemName = "rocketLaunch"
-        else
-            global.rocket.goalItemName = goalTypeString
-        end
+        global.rocket.goalItemName = goalTypeString
         Rocket.ResetRocketLaunchedGoalCount()
     end
 end
 
+Rocket.UpdateGoalTarget = function()
+    global.rocket.goalTarget = global.rocket.startingGoal + global.rocket.goalIncrease
+    Interfaces.Call("Gui.UpdateOverviewForAllPlayers")
+end
+
 Rocket.OnCommandIncreaseGoal = function(commandData)
     local args = Commands.GetArgumentsFromCommand(commandData.parameter)
-    if args < 1 or args > 2 then
+    if #args < 1 or #args > 2 then
         Logging.LogPrint("ERROR: rocket_target_increase_goal called with wrong number of arguments")
         return
     end
@@ -58,14 +61,16 @@ Rocket.OnCommandIncreaseGoal = function(commandData)
         return
     end
     global.rocket.goalIncrease = global.rocket.goalIncrease + increaseValue
-    for _ = 0, increaseValue do
+    local supporterName = args[2] or ""
+    for _ = 1, increaseValue do
         local id = #global.rocket.goalIncreaseSupporters + 1
         global.rocket.goalIncreaseSupporters[id] = {
             id = id,
-            description = args[2]
+            description = supporterName,
+            done = false
         }
     end
-    Interfaces.Call("Gui.UpdateValueForAllPlayers")
+    Rocket.UpdateGoalTarget()
 end
 
 Rocket.OnRocketLaunched = function(event)
@@ -88,11 +93,12 @@ Rocket.OnRocketLaunched = function(event)
         )
     end
     Rocket.AddRocketLaunchedGoalItems(rocketId)
+    Interfaces.Call("Gui.UpdateOverviewForAllPlayers")
 end
 
 Rocket.AddRocketLaunchedGoalItems = function(rocketId)
     local done = 0
-    if global.rocket.goalItemName == "rocketLaunch" then
+    if global.rocket.goalItemName == "rocket-silo-rocket" then
         done = 1
     else
         local items = global.rocket.rocketsLaunched[rocketId].items
@@ -103,12 +109,27 @@ Rocket.AddRocketLaunchedGoalItems = function(rocketId)
         end
     end
     global.rocket.goalProgress = global.rocket.goalProgress + done
+    --Not done as not sure how to handle the starting target value
+    --[[for _, supporter in pairs(global.rocket.goalIncreaseSupporters) do
+        if supporter.done == false then
+            supporter.done = true
+            done = done - 1
+            if done == 0 then
+                break
+            end
+        end
+    end]]
 end
 
 Rocket.ResetRocketLaunchedGoalCount = function()
+    for _, supporter in pairs(global.rocket.goalIncreaseSupporters) do
+        supporter.done = false
+    end
     for i = 1, #global.rocket.rocketsLaunched do
         Rocket.AddRocketLaunchedGoalItems(i)
     end
+    Rocket.UpdateGoalTarget()
+    Interfaces.Call("Gui.RecreateAllPlayers")
 end
 
 return Rocket

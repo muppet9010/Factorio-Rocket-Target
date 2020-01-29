@@ -10,8 +10,8 @@ data:extend(
         {
             name = "rocket_target-goal_type",
             type = "string-setting",
-            default_value = "rocket_launch",
-            allowed_values = {"rocket_launch", "satellite"},
+            default_value = "rocket-silo-rocket",
+            allowed_values = {"rocket-silo-rocket", "satellite"},
             setting_type = "runtime-global",
             order = "1001"
         }
