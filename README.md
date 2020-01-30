@@ -15,6 +15,6 @@ Commands
 ----------
 All commands that take strings support spaces if the strings are wrapped in quotes. i.e. "my name"
 
- - Add a set number to the goal and option to record text for this increase for some future use ???.
-   - syntax: rocket_target_increase_goal TARGET_INCREASE_NUMBER "TEXT"
-   - example: rocket_target_increase_goal 1 "my supporter"
+ - Add a set number to the goal and optional description text for this increase for some future use ???.
+   - syntax: /rocket_target_increase_goal [TARGET_INCREASE_NUMBER] ["OPTIONAL DESCRIPTION TEXT"]
+   - example: /rocket_target_increase_goal 1 "my supporter"
