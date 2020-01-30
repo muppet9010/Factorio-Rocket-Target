@@ -1,7 +1,9 @@
 local Interfaces = require("utility/interfaces")
 local Events = require("utility/events")
 local GuiUtil = require("utility/gui-util")
-local Logging = require("utility/logging")
+--local Logging = require("utility/logging")
+local Colors = require("utility/colors")
+local GuiActions = require("utility/gui-actions")
 local Gui = {}
 
 Gui.CreateGlobals = function()
@@ -14,6 +16,8 @@ Gui.OnLoad = function()
     Events.RegisterHandler(defines.events.on_player_joined_game, "Gui.OnPlayerJoined", Gui.OnPlayerJoined)
     Interfaces.RegisterInterface("Gui.RecreateAllPlayers", Gui.RecreateAllPlayers)
     Events.RegisterHandler(defines.events.on_lua_shortcut, "Gui.OnLuaShortcut", Gui.OnLuaShortcut)
+    Interfaces.RegisterInterface("Gui.ShowWinningGuiAllPlayers", Gui.ShowWinningGuiAllPlayers)
+    GuiActions.RegisterActionType("Gui.CloseWinningGuiForPlayer", Gui.CloseWinningGuiForPlayer)
 end
 
 Gui.Startup = function()
@@ -63,9 +67,13 @@ Gui.CreateOverviewForPlayer = function(player)
 
     local frame = GuiUtil.AddElement({parent = player.gui.left, name = "overview", type = "frame", style = "muppet_margin_frame_main"}, "overview")
     local flow = GuiUtil.AddElement({parent = frame, name = "overview", type = "flow", direction = "vertical", style = "muppet_vertical_flow"})
-    GuiUtil.AddElement({parent = flow, name = "overviewTitle", type = "label", caption = {"string-mod-setting.rocket_target-goal_type-" .. global.rocket.goalItemName}, style = "muppet_large_semibold_heading"})
+    local overviewValueLabelStyle = "muppet_large_bold_heading"
+    if global.rocket.showGoalTitleText then
+        GuiUtil.AddElement({parent = flow, name = "overviewTitle", type = "label", caption = {"string-mod-setting.rocket_target-goal_type-" .. global.rocket.goalItemName}, style = "muppet_large_bold_heading"})
+        overviewValueLabelStyle = "muppet_medium_semibold_text"
+    end
     local overViewValueTable = GuiUtil.AddElement({parent = flow, name = "overviewValue", type = "table", column_count = 2})
-    GuiUtil.AddElement({parent = overViewValueTable, name = "overviewValue", type = "label", style = "muppet_medium_semibold_text"}, "overview")
+    GuiUtil.AddElement({parent = overViewValueTable, name = "overviewValue", type = "label", style = overviewValueLabelStyle}, "overview")
     GuiUtil.AddElement({parent = overViewValueTable, name = "overviewValue", type = "sprite", style = "rocket_target_medium_text_sprite"}, "overview")
 
     Gui.UpdateOverviewForPlayer(player)
@@ -83,15 +91,11 @@ Gui.UpdateOverviewForPlayer = function(player)
         return
     end
 
-    GuiUtil.UpdateElementFromPlayersReferenceStorage(
-        playerIndex,
-        "overview",
-        "overviewValue",
-        "label",
-        {
-            caption = {"self", global.rocket.goalProgress, global.rocket.goalTarget}
-        }
-    )
+    local valueLabel = GuiUtil.GetElementFromPlayersReferenceStorage(playerIndex, "overview", "overviewValue", "label")
+    valueLabel.caption = {"gui-caption." .. GuiUtil.GenerateName("overviewValue", "label"), global.rocket.goalProgress, global.rocket.goalTarget}
+    if global.rocket.goalReached then
+        valueLabel.style.font_color = Colors.limegreen
+    end
 
     local valueSprite = GuiUtil.GetElementFromPlayersReferenceStorage(playerIndex, "overview", "overviewValue", "sprite")
     local valueSpritePath
@@ -109,6 +113,53 @@ Gui.OnLuaShortcut = function(eventData)
         local player = game.get_player(eventData.player_index)
         Gui.ToggleOverViewForPlayer(player)
     end
+end
+
+Gui.ShowWinningGuiAllPlayers = function()
+    for _, player in pairs(game.connected_players) do
+        Gui.ShowWinningGuiForPlayer(player)
+    end
+end
+
+Gui.ShowWinningGuiForPlayer = function(player)
+    if global.rocket.winningTitle == "" and global.rocket.winningMessage == "" then
+        return
+    end
+    local text1 = global.rocket.winningTitle
+    local text2 = ""
+    if text1 == "" then
+        text1 = global.rocket.winningMessage
+    else
+        text2 = global.rocket.winningMessage
+    end
+
+    local frameOuter = GuiUtil.AddElement({parent = player.gui.center, name = "winningGuiOuter", type = "frame", style = "muppet_frame_main"}, "winningMessage")
+    local flowOuter = GuiUtil.AddElement({parent = frameOuter, name = "winningGuiOuter", type = "flow", direction = "vertical", style = "muppet_vertical_flow"})
+
+    local flowOuterContent = GuiUtil.AddElement({parent = flowOuter, name = "winningGuiOuterContent", type = "flow", direction = "horizontal", style = "muppet_horizontal_flow"})
+    local winningGuiOuterContentLabel = GuiUtil.AddElement({parent = flowOuterContent, name = "winningGuiOuterContent", type = "label", style = "muppet_large_bold_heading", caption = text1})
+    winningGuiOuterContentLabel.style.horizontal_align = "left"
+    winningGuiOuterContentLabel.style.maximal_width = 470
+
+    local closeButtonFlow = GuiUtil.AddElement({parent = flowOuterContent, name = "winningGuiCloseButton", type = "flow", direction = "horizontal", style = "muppet_horizontal_flow"})
+    closeButtonFlow.style.horizontal_align = "right"
+    closeButtonFlow.style.horizontally_stretchable = true
+    closeButtonFlow.style.padding = 4
+    GuiUtil.AddElement({parent = closeButtonFlow, name = "winningGuiCloseButton", type = "sprite-button", sprite = "utility/close_white", tooltip = "self", style = "close_button"})
+    GuiActions.RegisterButtonToAction("winningGuiCloseButton", "sprite-button", "Gui.CloseWinningGuiForPlayer")
+
+    if text2 ~= "" then
+        local frameInner = GuiUtil.AddElement({parent = flowOuter, name = "winningGuiInnerContent", type = "frame", style = "muppet_frame_content"})
+        frameInner.style.horizontally_stretchable = true
+        local winningGuiInnerContentLabel = GuiUtil.AddElement({parent = frameInner, name = "winningGuiInnerContent", type = "label", style = "muppet_medium_semibold_text", caption = text2})
+        winningGuiInnerContentLabel.style.horizontal_align = "left"
+        winningGuiInnerContentLabel.style.maximal_width = 500
+    end
+end
+
+Gui.CloseWinningGuiForPlayer = function(actionData)
+    local player = game.get_player(actionData.playerIndex)
+    GuiUtil.DestroyElementInPlayersReferenceStorage(player.index, "winningMessage", "winningGuiOuter", "frame")
 end
 
 return Gui

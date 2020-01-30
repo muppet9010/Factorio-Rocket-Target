@@ -22,6 +22,10 @@ Rocket.CreateGlobals = function()
     global.rocket.goalProgress = global.rocket.goalProgress or 0
     global.rocket.goalIncreaseSupporters = global.rocket.goalIncreaseSupporters or {}
     global.rocket.goalItemName = global.rocket.goalItemName or ""
+    global.rocket.showGoalTitleText = global.rocket.showGoalTitleText or false
+    global.rocket.goalReached = global.rocket.goalReached or false
+    global.rocket.winningTitle = global.rocket.winningTitle or ""
+    global.rocket.winningMessage = global.rocket.winningMessage or ""
 end
 
 Rocket.OnLoad = function()
@@ -41,6 +45,16 @@ Rocket.OnSettingChanged = function(event)
         local goalTypeString = settings.global["rocket_target-goal_type"].value
         global.rocket.goalItemName = goalTypeString
         Rocket.ResetRocketLaunchedGoalCount()
+    end
+    if event == nil or event.setting == "rocket_target-goal_title" then
+        global.rocket.showGoalTitleText = settings.global["rocket_target-goal_title"].value
+        Interfaces.Call("Gui.RecreateAllPlayers")
+    end
+    if event == nil or event.setting == "rocket_target-winning_title" then
+        global.rocket.winningTitle = settings.global["rocket_target-winning_title"].value
+    end
+    if event == nil or event.setting == "rocket_target-winning_message" then
+        global.rocket.winningMessage = settings.global["rocket_target-winning_message"].value
     end
 end
 
@@ -85,10 +99,10 @@ Rocket.OnRocketLaunched = function(event)
     }
     for name, count in pairs(rocket.get_inventory(defines.inventory.rocket).get_contents()) do
         table.insert(
-            global.rocket.rocketsLaunched[rocketId],
+            global.rocket.rocketsLaunched[rocketId].items,
             {
-                itemName = name,
-                itemCount = count
+                name = name,
+                count = count
             }
         )
     end
@@ -102,13 +116,14 @@ Rocket.AddRocketLaunchedGoalItems = function(rocketId)
         done = 1
     else
         local items = global.rocket.rocketsLaunched[rocketId].items
-        for name, count in pairs(items) do
-            if name == global.rocket.goalItemName then
-                done = count
+        for _, item in pairs(items) do
+            if item.name == global.rocket.goalItemName then
+                done = done + item.count
             end
         end
     end
     global.rocket.goalProgress = global.rocket.goalProgress + done
+    Rocket.CheckGoalCompleted()
     --Not done as not sure how to handle the starting target value
     --[[for _, supporter in pairs(global.rocket.goalIncreaseSupporters) do
         if supporter.done == false then
@@ -122,14 +137,27 @@ Rocket.AddRocketLaunchedGoalItems = function(rocketId)
 end
 
 Rocket.ResetRocketLaunchedGoalCount = function()
+    global.rocket.goalProgress = 0
     for _, supporter in pairs(global.rocket.goalIncreaseSupporters) do
         supporter.done = false
     end
-    for i = 1, #global.rocket.rocketsLaunched do
-        Rocket.AddRocketLaunchedGoalItems(i)
+    for id = 1, #global.rocket.rocketsLaunched do
+        Rocket.AddRocketLaunchedGoalItems(id)
     end
     Rocket.UpdateGoalTarget()
     Interfaces.Call("Gui.RecreateAllPlayers")
+end
+
+Rocket.CheckGoalCompleted = function()
+    if global.rocket.goalReached then
+        return
+    end
+    if global.rocket.goalProgress >= global.rocket.goalTarget then
+        global.rocket.goalReached = true
+        Interfaces.Call("Gui.ShowWinningGuiAllPlayers")
+    else
+        global.rocket.goalReached = false
+    end
 end
 
 return Rocket
