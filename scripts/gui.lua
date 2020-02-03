@@ -92,7 +92,11 @@ Gui.UpdateOverviewForPlayer = function(player)
     end
 
     local valueLabel = GuiUtil.GetElementFromPlayersReferenceStorage(playerIndex, "overview", "overviewValue", "label")
-    valueLabel.caption = {"gui-caption." .. GuiUtil.GenerateName("overviewValue", "label"), global.rocket.goalProgress, global.rocket.goalTarget}
+    if global.rocket.goalTarget > 0 then
+        valueLabel.caption = {"gui-caption." .. GuiUtil.GenerateName("overviewValue", "label"), global.rocket.goalProgress, global.rocket.goalTarget}
+    else
+        valueLabel.caption = global.rocket.goalProgress
+    end
     if global.rocket.goalReached then
         valueLabel.style.font_color = Colors.limegreen
     end

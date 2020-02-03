@@ -149,7 +149,7 @@ Rocket.ResetRocketLaunchedGoalCount = function()
 end
 
 Rocket.CheckGoalCompleted = function()
-    if global.rocket.goalReached then
+    if global.rocket.goalReached or global.rocket.goalTarget <= 0 then
         return
     end
     if global.rocket.goalProgress >= global.rocket.goalTarget then
