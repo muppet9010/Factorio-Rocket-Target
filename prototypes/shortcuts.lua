@@ -6,6 +6,7 @@ data:extend(
             type = "shortcut",
             name = "rocket_target-overview_toggle",
             action = "lua",
+            toggleable = true,
             icon = {
                 filename = Constants.AssetModName .. "/graphics/gui/target-button.png",
                 width = 36,
