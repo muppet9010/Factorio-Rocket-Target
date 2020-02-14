@@ -23,7 +23,6 @@ local function OnStartup()
     OnLoad()
     OnSettingChanged(nil)
 
-    Rocket.Startup()
     Gui.Startup()
 end
 

@@ -15,10 +15,18 @@ Configurable behaviour
  - Mod setting to set the winning GUI title and message for when the goal is reached. Both are optional and if both left blank no winning message is shown. Message GUI doesn't end game.
  - A list of rockets and their contents are kept by the mod so all settings can be changed mid game and will having previous efforts accounted for.
 
+
+Notes
+-------
+
+- At present the goal can be set and incremented by command as either whole or decimal numbers. The goal value will be rounded down to a whole number when checked for completion and when displayed in the GUI. So value of '1.9' will be treated as '1'.
+
+
 Commands
 ----------
 All commands that take strings support spaces if the strings are wrapped in quotes. i.e. "my name"
 
- - Add a set number to the goal and optional description text for this increase for some future use ???.
+
+- Rocket target Increase Goal: Add a set number to the goal and an optional description text for this increase for some future use maybe.
    - syntax: /rocket_target_increase_goal [TARGET_INCREASE_NUMBER] ["OPTIONAL DESCRIPTION TEXT"]
    - example: /rocket_target_increase_goal 1 "my supporter"

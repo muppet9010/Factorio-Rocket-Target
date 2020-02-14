@@ -33,9 +33,6 @@ Rocket.OnLoad = function()
     Events.RegisterHandler(defines.events.on_rocket_launched, "Rocket.OnRocketLaunched", Rocket.OnRocketLaunched)
 end
 
-Rocket.Startup = function()
-end
-
 Rocket.OnSettingChanged = function(event)
     if event == nil or event.setting == "rocket_target-starting_goal" then
         global.rocket.startingGoal = tonumber(settings.global["rocket_target-starting_goal"].value)
@@ -59,7 +56,7 @@ Rocket.OnSettingChanged = function(event)
 end
 
 Rocket.UpdateGoalTarget = function()
-    global.rocket.goalTarget = global.rocket.startingGoal + global.rocket.goalIncrease
+    global.rocket.goalTarget = math.floor(global.rocket.startingGoal + global.rocket.goalIncrease)
     Interfaces.Call("Gui.UpdateOverviewForAllPlayers")
 end
 
