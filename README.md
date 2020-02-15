@@ -28,5 +28,5 @@ All commands that take strings support spaces if the strings are wrapped in quot
 
 
 - Rocket target Increase Goal: Add a set number to the goal and an optional description text for this increase for some future use maybe.
-   - syntax: /rocket_target_increase_goal [TARGET_INCREASE_NUMBER] ["OPTIONAL DESCRIPTION TEXT"]
-   - example: /rocket_target_increase_goal 1 "my supporter"
+   - syntax: `/rocket_target_increase_goal [TARGET_INCREASE_NUMBER] ["OPTIONAL DESCRIPTION TEXT"]`
+   - example: `/rocket_target_increase_goal 1 "my supporter"`
