@@ -32,7 +32,10 @@ end
 
 Gui.RecreatePlayer = function(player)
     GuiUtil.DestroyPlayersReferenceStorage(player.index, "overview")
-    Gui.CreateOverviewForPlayer(player)
+    if not global.gui.playerOverviewOpen[player.index] then
+        return
+    end
+    Gui.OpenOverviewForPlayer(player)
 end
 
 Gui.RecreateAllPlayers = function()
@@ -43,30 +46,25 @@ end
 
 Gui.OpenOverviewForPlayer = function(player)
     global.gui.playerOverviewOpen[player.index] = true
+    player.set_shortcut_toggled("rocket_target-overview_toggle", true)
     Gui.CreateOverviewForPlayer(player)
 end
 
 Gui.CloseOverviewForPlayer = function(player)
     GuiUtil.DestroyPlayersReferenceStorage(player.index, "overview")
     global.gui.playerOverviewOpen[player.index] = false
+    player.set_shortcut_toggled("rocket_target-overview_toggle", false)
 end
 
 Gui.ToggleOverViewForPlayer = function(player)
     if global.gui.playerOverviewOpen[player.index] then
-        player.set_shortcut_toggled("rocket_target-overview_toggle", false)
         Gui.CloseOverviewForPlayer(player)
     else
-        player.set_shortcut_toggled("rocket_target-overview_toggle", true)
         Gui.OpenOverviewForPlayer(player)
     end
 end
 
 Gui.CreateOverviewForPlayer = function(player)
-    local playerIndex = player.index
-    if not global.gui.playerOverviewOpen[playerIndex] then
-        return
-    end
-
     local overviewValueLabelStyle = "muppet_label_heading_large_bold"
     if global.rocket.showGoalTitleText then
         overviewValueLabelStyle = "muppet_label_text_medium_semibold"
