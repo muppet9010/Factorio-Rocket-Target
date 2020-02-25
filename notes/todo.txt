@@ -1,4 +1,4 @@
-
+Next:
 
 Future Ideas:
 	- popup gui to show which rockets/names have been done from shortcut item and shortcut key to open. This needs working out how to account for the starting goal and initial launchs.

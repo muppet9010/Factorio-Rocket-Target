@@ -8,7 +8,7 @@ Configurable behaviour
 ------------------
 
  - Per player shortcut to toggle the GUI on and off with the image of a bullseye.
- - Mod settings to set the goal type, either rockets launched or satellites launched.
+ - Mod settings to set the goal type; rockets launched or the number of satellites or fish launched in to space.
  - Mod setting to set the starting target value.
  - If the target value is 0 or less then no target value is shown in the GUI, just the number launched. This is for usage as a counter, rather than a goal.
  - Mod setting to set if the goal type is shown as a title or not. The goal type and number launched out of target are always shown in the GUI.

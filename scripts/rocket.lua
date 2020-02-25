@@ -39,8 +39,7 @@ Rocket.OnSettingChanged = function(event)
         Rocket.UpdateGoalTarget()
     end
     if event == nil or event.setting == "rocket_target-goal_type" then
-        local goalTypeString = settings.global["rocket_target-goal_type"].value
-        global.rocket.goalItemName = goalTypeString
+        global.rocket.goalItemName = settings.global["rocket_target-goal_type"].value
         Rocket.ResetRocketLaunchedGoalCount()
     end
     if event == nil or event.setting == "rocket_target-goal_title" then

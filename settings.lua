@@ -11,7 +11,7 @@ data:extend(
             name = "rocket_target-goal_type",
             type = "string-setting",
             default_value = "rocket-silo-rocket",
-            allowed_values = {"rocket-silo-rocket", "satellite"},
+            allowed_values = {"rocket-silo-rocket", "satellite", "raw-fish"},
             setting_type = "runtime-global",
             order = "1002"
         },
