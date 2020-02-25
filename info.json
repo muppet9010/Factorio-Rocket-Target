@@ -1,0 +1,13 @@
+{
+    "name": "rocket_target",
+    "version": "18.0.0",
+    "title": "Rocket Target",
+    "author": "Muppet9010",
+    "contact": "",
+    "homepage": "https://mods.factorio.com/mod/rocket_target",
+    "factorio_version": "0.18",
+    "dependencies": [
+        "base >= 0.18"
+    ],
+    "description": "A simple GUI that tracks rocket or specific payload launches against a goal"
+}

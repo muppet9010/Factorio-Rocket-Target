@@ -1,0 +1,6 @@
+Next:
+
+Future Ideas:
+	- popup gui to show which rockets/names have been done from shortcut item and shortcut key to open. This needs working out how to account for the starting goal and initial launchs.
+	- Use the name logged against goal increases in the tracking table and update their completed status when rockets are launched. At present not sure how to marking complete the starting goal vs supporter goal entries when rockets launched.
+	- Simple export option of supporters rockets launched for upload to spreadsheet. Do when the supporters table is used.
