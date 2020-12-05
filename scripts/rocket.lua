@@ -21,16 +21,18 @@ Rocket.CreateGlobals = function()
     global.rocket.goalTarget = global.rocket.goalTarget or 0
     global.rocket.goalProgress = global.rocket.goalProgress or 0
     global.rocket.goalIncreaseSupporters = global.rocket.goalIncreaseSupporters or {}
-    global.rocket.goalItemName = global.rocket.goalItemName or ""
+    global.rocket.goalItemName = global.rocket.goalItemName or "unknown"
     global.rocket.showGoalTitleText = global.rocket.showGoalTitleText or false
     global.rocket.goalReached = global.rocket.goalReached or false
     global.rocket.winningTitle = global.rocket.winningTitle or ""
     global.rocket.winningMessage = global.rocket.winningMessage or ""
+    global.rocket.startingCompletedCount = global.rocket.startingCompletedCount or 0
+    global.rocket.customItemTrackedName = global.rocket.customItemTrackedName or ""
 end
 
 Rocket.OnLoad = function()
     Commands.Register("rocket_target_increase_goal", {"api-description.rocket_target_increase_goal"}, Rocket.OnCommandIncreaseGoal, true)
-    Events.RegisterHandler(defines.events.on_rocket_launched, "Rocket.OnRocketLaunched", Rocket.OnRocketLaunched)
+    Events.RegisterHandlerEvent(defines.events.on_rocket_launched, "Rocket.OnRocketLaunched", Rocket.OnRocketLaunched)
 end
 
 Rocket.OnSettingChanged = function(event)
@@ -38,8 +40,13 @@ Rocket.OnSettingChanged = function(event)
         global.rocket.startingGoal = tonumber(settings.global["rocket_target-starting_goal"].value)
         Rocket.UpdateGoalTarget()
     end
-    if event == nil or event.setting == "rocket_target-goal_type" then
+    if event == nil or event.setting == "rocket_target-goal_type" or event.setting == "rocket_target-custom_item_tracked" or event.setting == "rocket_target-starting_completed_count" then
         global.rocket.goalItemName = settings.global["rocket_target-goal_type"].value
+        global.rocket.startingCompletedCount = settings.global["rocket_target-starting_completed_count"].value
+        global.rocket.customItemTrackedName = settings.global["rocket_target-custom_item_tracked"].value
+        if global.rocket.goalItemName == "custom" then
+            Rocket.CustomItemPrototypeNameSet()
+        end
         Rocket.ResetRocketLaunchedGoalCount()
     end
     if event == nil or event.setting == "rocket_target-goal_title" then
@@ -110,13 +117,15 @@ Rocket.AddRocketLaunchedGoalItems = function(rocketId)
     local done = 0
     if global.rocket.goalItemName == "rocket-silo-rocket" then
         done = 1
-    else
+    elseif global.rocket.goalItemName ~= "unknown" then
         local items = global.rocket.rocketsLaunched[rocketId].items
         for _, item in pairs(items) do
             if item.name == global.rocket.goalItemName then
                 done = done + item.count
             end
         end
+    else
+        Logging.LogPrint("Invalid custom item prototype name configured: '" .. tostring(global.rocket.goalItemName) .. "'")
     end
     global.rocket.goalProgress = global.rocket.goalProgress + done
     Rocket.CheckGoalCompleted()
@@ -133,7 +142,7 @@ Rocket.AddRocketLaunchedGoalItems = function(rocketId)
 end
 
 Rocket.ResetRocketLaunchedGoalCount = function()
-    global.rocket.goalProgress = 0
+    global.rocket.goalProgress = global.rocket.startingCompletedCount
     for _, supporter in pairs(global.rocket.goalIncreaseSupporters) do
         supporter.done = false
     end
@@ -153,6 +162,16 @@ Rocket.CheckGoalCompleted = function()
         Interfaces.Call("Gui.ShowWinningGuiAllPlayers")
     else
         global.rocket.goalReached = false
+    end
+end
+
+Rocket.CustomItemPrototypeNameSet = function()
+    local results = game.get_filtered_item_prototypes({{filter = "name", name = global.rocket.customItemTrackedName}})
+    if results ~= nil and #results == 1 then
+        global.rocket.goalItemName = global.rocket.customItemTrackedName
+    else
+        Logging.LogPrint("Invalid custom item prototype name: '" .. tostring(global.rocket.customItemTrackedName) .. "'")
+        global.rocket.goalItemName = "unknown"
     end
 end
 
