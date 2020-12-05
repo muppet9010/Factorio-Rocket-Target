@@ -1,5 +1,6 @@
 local Rocket = require("scripts/rocket")
 local Gui = require("scripts/gui")
+local Utils = require("utility/utils")
 
 local function CreateGlobals()
     Rocket.CreateGlobals()
@@ -22,6 +23,10 @@ local function OnStartup()
     OnSettingChanged(nil)
 
     Gui.Startup()
+
+    if settings.startup["rocket_target-disable_freeplay_rocket_win"].value then
+        Utils.DisableWinOnRocket()
+    end
 end
 
 script.on_init(OnStartup)

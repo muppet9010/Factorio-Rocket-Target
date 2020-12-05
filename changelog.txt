@@ -2,11 +2,12 @@
 Version: 20.0.2
 Date: 2020-12-05
   Features:
-    - Add mod setting for starting value so player can populate maps with existing values.
+    - Add mod setting for starting launch count so when added to existing save the player can populate it with existing launch count.
+    - Add mod setting to disable the Freeplay win message on first rocket launched. Defautls to disable it.
   Changes:
   Bugfixes:
   Info:
-    - Version numbers back on track, previous versio released as 1.1.0 by mistake.
+    - Version numbers back on track, previous version released as 1.1.0 by mistake.
 ---------------------------------------------------------------------------------------------------
 Version: 20.0.1
 Date: 2020-11-27

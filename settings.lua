@@ -1,6 +1,18 @@
 data:extend(
     {
         {
+            name = "rocket_target-disable_freeplay_rocket_win",
+            type = "bool-setting",
+            default_value = true,
+            setting_type = "startup",
+            order = "1001"
+        }
+    }
+)
+
+data:extend(
+    {
+        {
             name = "rocket_target-starting_goal",
             type = "int-setting",
             default_value = 0,
