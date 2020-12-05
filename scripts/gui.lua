@@ -12,10 +12,11 @@ Gui.CreateGlobals = function()
 end
 
 Gui.OnLoad = function()
+    GuiActionsClick.MonitorGuiClickActions()
     Interfaces.RegisterInterface("Gui.UpdateOverviewForAllPlayers", Gui.UpdateOverviewForAllPlayers)
-    Events.RegisterHandler(defines.events.on_player_joined_game, "Gui.OnPlayerJoined", Gui.OnPlayerJoined)
+    Events.RegisterHandlerEvent(defines.events.on_player_joined_game, "Gui.OnPlayerJoined", Gui.OnPlayerJoined)
     Interfaces.RegisterInterface("Gui.RecreateAllPlayers", Gui.RecreateAllPlayers)
-    Events.RegisterHandler(defines.events.on_lua_shortcut, "Gui.OnLuaShortcut", Gui.OnLuaShortcut)
+    Events.RegisterHandlerEvent(defines.events.on_lua_shortcut, "Gui.OnLuaShortcut", Gui.OnLuaShortcut)
     Interfaces.RegisterInterface("Gui.ShowWinningGuiAllPlayers", Gui.ShowWinningGuiAllPlayers)
     GuiActionsClick.LinkGuiClickActionNameToFunction("Gui.CloseWinningGuiForPlayer", Gui.CloseWinningGuiForPlayer)
 end

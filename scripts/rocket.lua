@@ -30,7 +30,7 @@ end
 
 Rocket.OnLoad = function()
     Commands.Register("rocket_target_increase_goal", {"api-description.rocket_target_increase_goal"}, Rocket.OnCommandIncreaseGoal, true)
-    Events.RegisterHandler(defines.events.on_rocket_launched, "Rocket.OnRocketLaunched", Rocket.OnRocketLaunched)
+    Events.RegisterHandlerEvent(defines.events.on_rocket_launched, "Rocket.OnRocketLaunched", Rocket.OnRocketLaunched)
 end
 
 Rocket.OnSettingChanged = function(event)

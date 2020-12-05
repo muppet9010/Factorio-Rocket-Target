@@ -1,7 +1,7 @@
 Next:
-    - Add mod setting for an item prototype name, item display anme and item image to be trackerd and listed. For flexible compatibility with anything.
+    - Add mod setting for an item prototype name, item display name and item image to be trackerd and listed. For flexible compatibility with anything.
     - Mod option to disable first rocket win condition.
-    - Update Utility library
+    - Add mod setting for starting value so player can populate with existing values.
 
 Future Ideas:
 	- popup gui to show which rockets/names have been done from shortcut item and shortcut key to open. This needs working out how to account for the starting goal and initial launchs.
