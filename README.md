@@ -14,6 +14,7 @@ Configurable behaviour
  - Mod setting to set if the goal type is shown as a title or not. The goal type and number launched out of target are always shown in the GUI.
  - Mod setting to set the winning GUI title and message for when the goal is reached. Both are optional and if both left blank no winning message is shown. Message GUI doesn't end game.
  - A list of rockets and their contents are kept by the mod so all settings can be changed mid game and will having previous efforts accounted for.
+ - Mod setting to set a starting completed count. For use when adding the mod to an existing save.
 
 
 Notes
