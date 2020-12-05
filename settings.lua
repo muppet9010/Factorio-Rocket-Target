@@ -3,14 +3,14 @@ data:extend(
         {
             name = "rocket_target-starting_goal",
             type = "int-setting",
-            default_value = 100,
+            default_value = 0,
             setting_type = "runtime-global",
             order = "1001"
         },
         {
             name = "rocket_target-goal_type",
             type = "string-setting",
-            default_value = "rocket-silo-rocket",
+            default_value = "satellite",
             allowed_values = {"rocket-silo-rocket", "satellite", "raw-fish"},
             setting_type = "runtime-global",
             order = "1002"
@@ -23,12 +23,19 @@ data:extend(
             order = "1003"
         },
         {
+            name = "rocket_target-starting_completed_count",
+            type = "int-setting",
+            default_value = 0,
+            setting_type = "runtime-global",
+            order = "1004"
+        },
+        {
             name = "rocket_target-winning_title",
             type = "string-setting",
             default_value = "WINNER!",
             allow_blank = true,
             setting_type = "runtime-global",
-            order = "1004"
+            order = "2001"
         },
         {
             name = "rocket_target-winning_message",
@@ -36,7 +43,7 @@ data:extend(
             default_value = "Congrats you are freaking AWESOME",
             allow_blank = true,
             setting_type = "runtime-global",
-            order = "1005"
+            order = "2002"
         }
     }
 )

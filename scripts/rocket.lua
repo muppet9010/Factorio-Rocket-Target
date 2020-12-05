@@ -26,6 +26,7 @@ Rocket.CreateGlobals = function()
     global.rocket.goalReached = global.rocket.goalReached or false
     global.rocket.winningTitle = global.rocket.winningTitle or ""
     global.rocket.winningMessage = global.rocket.winningMessage or ""
+    global.rocket.startingCompletedCount = global.rocket.startingCompletedCount or 0
 end
 
 Rocket.OnLoad = function()
@@ -51,6 +52,10 @@ Rocket.OnSettingChanged = function(event)
     end
     if event == nil or event.setting == "rocket_target-winning_message" then
         global.rocket.winningMessage = settings.global["rocket_target-winning_message"].value
+    end
+    if event == nil or event.setting == "rocket_target-starting_completed_count" then
+        global.rocket.startingCompletedCount = settings.global["rocket_target-starting_completed_count"].value
+        Rocket.ResetRocketLaunchedGoalCount()
     end
 end
 
@@ -133,7 +138,7 @@ Rocket.AddRocketLaunchedGoalItems = function(rocketId)
 end
 
 Rocket.ResetRocketLaunchedGoalCount = function()
-    global.rocket.goalProgress = 0
+    global.rocket.goalProgress = global.rocket.startingCompletedCount
     for _, supporter in pairs(global.rocket.goalIncreaseSupporters) do
         supporter.done = false
     end
