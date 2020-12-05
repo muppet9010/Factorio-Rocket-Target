@@ -4,6 +4,7 @@ Date: 2020-12-05
   Features:
     - Add mod setting for starting launch count so when added to existing save the player can populate it with existing launch count.
     - Add mod setting to disable the Freeplay win message on first rocket launched. Defautls to disable it.
+    - Add mod options to specifiy a custom item prototype name.
   Changes:
   Bugfixes:
   Info:

@@ -67,8 +67,14 @@ end
 
 Gui.CreateOverviewForPlayer = function(player)
     local overviewValueLabelStyle = "muppet_label_heading_large_bold"
+    local goalItemNameCaption = ""
     if global.rocket.showGoalTitleText then
         overviewValueLabelStyle = "muppet_label_text_medium_semibold"
+        local goalItemName = {"item-name." .. global.rocket.goalItemName}
+        if global.rocket.goalItemName == "rocket-silo-rocket" then
+            goalItemName = "Rockets"
+        end
+        goalItemNameCaption = {"self", goalItemName}
     end
     GuiUtil.AddElement(
         {
@@ -84,8 +90,9 @@ Gui.CreateOverviewForPlayer = function(player)
                     style = "muppet_flow_vertical_marginTL",
                     children = {
                         {
+                            name = "goalType",
                             type = "label",
-                            caption = {"string-mod-setting.rocket_target-goal_type-" .. global.rocket.goalItemName},
+                            caption = goalItemNameCaption,
                             style = "muppet_label_heading_large_bold",
                             exclude = not global.rocket.showGoalTitleText
                         },
@@ -148,7 +155,11 @@ Gui.UpdateOverviewForPlayer = function(player)
     else
         valueSpritePath = "item/" .. global.rocket.goalItemName
     end
-    valueSprite.sprite = valueSpritePath
+    if game.is_valid_sprite_path(valueSpritePath) then
+        valueSprite.sprite = valueSpritePath
+    else
+        valueSprite.sprite = "item/item-unknown"
+    end
 end
 
 Gui.OnLuaShortcut = function(eventData)

@@ -23,23 +23,31 @@ data:extend(
             name = "rocket_target-goal_type",
             type = "string-setting",
             default_value = "satellite",
-            allowed_values = {"rocket-silo-rocket", "satellite", "raw-fish"},
+            allowed_values = {"rocket-silo-rocket", "satellite", "raw-fish", "custom"},
             setting_type = "runtime-global",
             order = "1002"
+        },
+        {
+            name = "rocket_target-custom_item_tracked",
+            type = "string-setting",
+            default_value = "",
+            allow_blank = true,
+            setting_type = "runtime-global",
+            order = "1003"
         },
         {
             name = "rocket_target-goal_title",
             type = "bool-setting",
             default_value = false,
             setting_type = "runtime-global",
-            order = "1003"
+            order = "1004"
         },
         {
             name = "rocket_target-starting_completed_count",
             type = "int-setting",
             default_value = 0,
             setting_type = "runtime-global",
-            order = "1004"
+            order = "1005"
         },
         {
             name = "rocket_target-winning_title",
