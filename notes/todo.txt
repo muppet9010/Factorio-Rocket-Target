@@ -1,7 +1,25 @@
 Next:
-	- Add interface as alternative to commands. Allows for matchs to be done on values passe in by other RCON tools.
+	- Add interface as alternative to commands. Allows for matches to be done on values passed in by other RCON tools. Tied into below features.
+
+
+Later:
+    - In all the below remember that it may be single rockets/items being counted, or it could be higher volume like fish.
+    - Add mod startup setting to separate out user tracked rocket targets and just numbers.
+    - Number only:
+        - Make command & interface reject usernames supplied.
+        - Support adding negative values to the target count.
+        - Allow to keep starting target and starting launched count settings.
+    - User tracked rockets only:
+        - Make command & interface require usernames.
+        - Add support for command & interface when given negative number will remove that count from existing values for that user, newest first. Do not allow negative final value for a user.
+        - add command to list target values for a given user.
+        - add command to list users and their total pending target values.
+        - add command to list the X target entries users to be done. Accept number and starting index (from 0 next). Used for debugging the list and spotting erroneous additions to then remove them via the other commands.
+        - add a command to mark a rocket value launched for a user. This is to provide an alternative way to do starting launched rockets. Will do oldest first.
+        - add mod setting for alert message shown when a rocket is launched and it completes some users targets. Should take in the user name as a special key. Should take in the number of that users target completed as a special key (for multi item targets, e.g. fish). One message per user satisfied by the rocket.
+        - add mod setting for the username of starting target and starting completed rockets. We need to track our target entries added via this so that we can update them in bulk if this mod setting is later changed. Also need to make sure that starting completed isn't greater than starting target.
+        - Check how the starting and completed values are handled both fresh and when changed in existing game.
 
 Future Ideas:
-	- popup gui to show which rockets/names have been done from shortcut item and shortcut key to open. This needs working out how to account for the starting goal and initial launchs.
-	- Use the name logged against goal increases in the tracking table and update their completed status when rockets are launched. At present not sure how to marking complete the starting goal vs supporter goal entries when rockets launched.
 	- Simple export option of supporters rockets launched for upload to spreadsheet. Do when the supporters table is used.
+    - popup gui to show which rockets/names have been done from shortcut item and shortcut key to open. Would have edit options for Admin users on the server. To replace the commands added previously to avoid needing to do heavy GUI work.

@@ -36,11 +36,12 @@
         "c:\\FactorioModding\\data",
         "c:\\FactorioModding\\data\\core\\lualib",
         "c:\\FactorioModding\\runtime-api",
-        "c:/Users/mikeh/AppData/Roaming/Code/User/workspaceStorage/3b7204474dd27b1c4479770abab86ebb/justarandomgeek.factoriomod-debug/sumneko-3rd/factorio/library"
+        "c:/Users/mikeh/AppData/Roaming/Code/User/workspaceStorage/3b7204474dd27b1c4479770abab86ebb/justarandomgeek.factoriomod-debug/sumneko-3rd/factorio/library",
+        "/utility", // Needed as we ignored it for errors.
     ],
     "Lua.workspace.ignoreDir": [
         ".vscode",
-        "/utility/*", // Exclude it as we its an old version and we aren;t going to update it right now.
+        "/utility/*", // Exclude it as we its an old version and we aren't going to update it right now.
     ],
     "Lua.workspace.userThirdParty": [
         "c:\\Users\\mikeh\\AppData\\Roaming\\Code\\User\\workspaceStorage\\3b7204474dd27b1c4479770abab86ebb\\justarandomgeek.factoriomod-debug\\sumneko-3rd"
